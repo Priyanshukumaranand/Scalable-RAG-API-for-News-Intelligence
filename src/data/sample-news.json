@@ -1,0 +1,72 @@
+[
+  {
+    "id": "sample-1",
+    "title": "AI drives new breakthroughs in drug discovery",
+    "url": "https://example.com/ai-drug-discovery",
+    "publishedAt": "2024-10-12T10:00:00Z",
+    "content": "Researchers leverage generative AI models to accelerate the identification of promising drug candidates, reducing timelines from years to months."
+  },
+  {
+    "id": "sample-2",
+    "title": "Quantum computing startup secures major funding",
+    "url": "https://example.com/quantum-funding",
+    "publishedAt": "2024-11-05T12:30:00Z",
+    "content": "A leading quantum computing firm announced a $150M funding round to expand its fault-tolerant hardware research."
+  },
+  {
+    "id": "sample-3",
+    "title": "Renewable energy storage hits new milestone",
+    "url": "https://example.com/renewable-storage",
+    "publishedAt": "2024-09-08T08:45:00Z",
+    "content": "Grid-scale battery deployments now exceed 500GWh globally, signaling rapid adoption of renewable storage solutions."
+  },
+  {
+    "id": "sample-4",
+    "title": "Autonomous vehicles begin limited city rollouts",
+    "url": "https://example.com/av-rollout",
+    "publishedAt": "2024-12-01T09:15:00Z",
+    "content": "Pilot programs for fully autonomous ride-hailing expand to three new metropolitan areas under strict safety oversight."
+  },
+  {
+    "id": "sample-5",
+    "title": "Cybersecurity report highlights rise in supply chain attacks",
+    "url": "https://example.com/supply-chain-attacks",
+    "publishedAt": "2024-10-25T14:20:00Z",
+    "content": "New data shows a 40% year-over-year increase in supply chain compromises, prompting calls for zero-trust adoption."
+  },
+  {
+    "id": "sample-6",
+    "title": "Breakthrough in battery recycling technologies",
+    "url": "https://example.com/battery-recycling",
+    "publishedAt": "2024-09-18T07:50:00Z",
+    "content": "Innovative chemical processes recover up to 95% of lithium and cobalt, improving the sustainability of EV supply chains."
+  },
+  {
+    "id": "sample-7",
+    "title": "Edge AI chips see rapid adoption in IoT devices",
+    "url": "https://example.com/edge-ai",
+    "publishedAt": "2024-08-30T16:05:00Z",
+    "content": "Manufacturers integrate low-power AI accelerators to enable on-device inference for vision and audio workloads."
+  },
+  {
+    "id": "sample-8",
+    "title": "Satellites map methane emissions with greater precision",
+    "url": "https://example.com/methane-tracking",
+    "publishedAt": "2024-07-21T11:40:00Z",
+    "content": "Next-gen Earth observation constellations track industrial methane leaks in near real-time, aiding climate monitoring."
+  },
+  {
+    "id": "sample-9",
+    "title": "Fintech platforms expand real-time cross-border payments",
+    "url": "https://example.com/cross-border-payments",
+    "publishedAt": "2024-08-12T13:10:00Z",
+    "content": "New partnerships allow instant settlement across 25 currencies, reducing transaction fees for SMEs."
+  },
+  {
+    "id": "sample-10",
+    "title": "Biotech firms apply CRISPR to climate-resilient crops",
+    "url": "https://example.com/climate-crops",
+    "publishedAt": "2024-11-30T10:55:00Z",
+    "content": "Gene-edited seeds show improved drought tolerance and yield stability in early field trials."
+  }
+]

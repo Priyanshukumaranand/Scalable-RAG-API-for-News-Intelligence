@@ -1,4 +1,6 @@
 import express from 'express';
+import ingestionRoutes from './routes/ingestionRoutes';
+import { errorHandler } from './middleware/errorHandler';
 
 export function createApp() {
   const app = express();
@@ -8,6 +10,10 @@ export function createApp() {
   app.get('/health', (_req, res) => {
     res.status(200).json({ status: 'ok' });
   });
+
+  app.use(ingestionRoutes);
+
+  app.use(errorHandler);
 
   return app;
 }

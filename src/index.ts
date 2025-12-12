@@ -1,11 +1,19 @@
-import dotenv from 'dotenv';
 import { createApp } from './app';
+import { env } from './config/env';
+import { ensureSchema } from './config/db';
+import { startIngestionWorker } from './queues/ingestionQueue';
 
-dotenv.config();
+async function bootstrap() {
+  await ensureSchema();
+  startIngestionWorker();
 
-const port = Number(process.env.PORT) || 3000;
-const app = createApp();
+  const app = createApp();
+  app.listen(env.port, () => {
+    console.log(`API listening on port ${env.port}`);
+  });
+}
 
-app.listen(port, () => {
-  console.log(`API listening on port ${port}`);
+bootstrap().catch((err) => {
+  console.error('Failed to start application', err);
+  process.exit(1);
 });
