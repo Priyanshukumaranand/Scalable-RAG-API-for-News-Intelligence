@@ -1,0 +1,33 @@
+{
+  "name": "edwitd",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Priyanshukumaranand/Scalable-RAG-API-for-News-Intelligence.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Priyanshukumaranand/Scalable-RAG-API-for-News-Intelligence/issues"
+  },
+  "homepage": "https://github.com/Priyanshukumaranand/Scalable-RAG-API-for-News-Intelligence#readme",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.0.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
+  }
+}
