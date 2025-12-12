@@ -6,4 +6,5 @@ module.exports = {
   moduleFileExtensions: ['ts', 'js', 'json'],
   collectCoverage: true,
   coverageDirectory: 'coverage',
+  setupFiles: ['<rootDir>/tests/setupEnv.ts'],
 };

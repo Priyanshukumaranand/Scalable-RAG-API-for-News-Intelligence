@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/Priyanshukumaranand/Scalable-RAG-API-for-News-Intelligence#readme",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "axios": "^1.13.2",
     "bullmq": "^5.66.0",
     "chromadb": "^3.1.7",
@@ -40,6 +41,7 @@
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.0.1",
+    "@types/pg": "^8.16.0",
     "@types/supertest": "^6.0.3",
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.49.0",

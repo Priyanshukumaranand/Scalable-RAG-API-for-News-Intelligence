@@ -1,5 +1,6 @@
 import express from 'express';
 import ingestionRoutes from './routes/ingestionRoutes';
+import chatRoutes from './routes/chatRoutes';
 import { errorHandler } from './middleware/errorHandler';
 
 export function createApp() {
@@ -12,6 +13,7 @@ export function createApp() {
   });
 
   app.use(ingestionRoutes);
+  app.use(chatRoutes);
 
   app.use(errorHandler);
 
