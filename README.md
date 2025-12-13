@@ -9,6 +9,32 @@ Backend assessment implementation with Node/Express, ChromaDB, Postgres, Redis, 
 - Postgres for structured interaction logs; Redis for chat short-term memory and queues; BullMQ for ingestion jobs.
 - Express + Zod for routing/validation; Jest for tests; ESLint/Prettier for hygiene.
 
+## Architecture (mermaid)
+```mermaid
+flowchart LR
+	User -->|HTTP| API[Express API]
+
+	subgraph Ingestion
+		API -->|POST /ingest| Queue[Ingestion Queue (BullMQ)]
+		Queue --> Worker[Ingestion Worker]
+		Worker --> RSS[RSS feeds / sample JSON]
+		Worker --> Emb[Embeddings (Jina)]
+		Emb --> Chroma[(Chroma DB)]
+	end
+
+	subgraph Chat
+		API -->|POST /chat| EmbQ[Embed query]
+		EmbQ --> Chroma
+		Chroma --> Context[Top-k passages]
+		Context --> Gemini[Gemini LLM]
+		Gemini --> API
+	end
+
+	API --> Redis[(Redis cache: chat ctx)]
+	API --> PG[(Postgres: interaction logs)]
+	Redis --> API
+```
+
 ## Quickstart (local)
 1) Copy env: `cp .env.example .env` and set `GEMINI_API_KEY` (optional for real LLM) and `JINA_API_KEY` (optional for real embeddings).
 2) Start dependencies (locally or via Docker): Postgres, Redis, Chroma. Update `CHROMA_URL`, `POSTGRES_URL`, `REDIS_URL` in `.env` if needed.
