@@ -1,0 +1,93 @@
+{
+  "family": "rag-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "2048",
+  "memory": "4096",
+  "executionRoleArn": "arn:aws:iam::985539781494:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "api",
+      "image": "985539781494.dkr.ecr.ap-south-1.amazonaws.com/rag-api:latest",
+      "essential": true,
+      "portMappings": [
+        { "containerPort": 3000, "protocol": "tcp" }
+      ],
+      "environment": [
+        { "name": "PORT", "value": "3000" },
+        { "name": "POSTGRES_URL", "value": "postgresql://postgres:postgres@postgres:5432/rag" },
+        { "name": "REDIS_URL", "value": "redis://redis:6379" },
+        { "name": "CHROMA_URL", "value": "http://chroma:8000" },
+        { "name": "GEMINI_API_KEY", "value": "" },
+        { "name": "JINA_API_KEY", "value": "" },
+        { "name": "RATE_LIMIT_WINDOW_MS", "value": "60000" },
+        { "name": "RATE_LIMIT_MAX", "value": "60" },
+        { "name": "DISABLE_QUEUE", "value": "false" }
+      ],
+      "dependsOn": [
+        { "containerName": "postgres", "condition": "START" },
+        { "containerName": "redis", "condition": "START" },
+        { "containerName": "chroma", "condition": "START" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/rag-task",
+          "awslogs-region": "ap-south-1",
+          "awslogs-stream-prefix": "api"
+        }
+      }
+    },
+    {
+      "name": "postgres",
+      "image": "postgres:16-alpine",
+      "essential": true,
+      "portMappings": [ { "containerPort": 5432, "protocol": "tcp" } ],
+      "environment": [
+        { "name": "POSTGRES_USER", "value": "postgres" },
+        { "name": "POSTGRES_PASSWORD", "value": "postgres" },
+        { "name": "POSTGRES_DB", "value": "rag" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/rag-task",
+          "awslogs-region": "ap-south-1",
+          "awslogs-stream-prefix": "postgres"
+        }
+      }
+    },
+    {
+      "name": "redis",
+      "image": "redis:7-alpine",
+      "essential": true,
+      "portMappings": [ { "containerPort": 6379, "protocol": "tcp" } ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/rag-task",
+          "awslogs-region": "ap-south-1",
+          "awslogs-stream-prefix": "redis"
+        }
+      }
+    },
+    {
+      "name": "chroma",
+      "image": "ghcr.io/chroma-core/chroma:latest",
+      "essential": true,
+      "portMappings": [ { "containerPort": 8000, "protocol": "tcp" } ],
+      "environment": [
+        { "name": "CHROMA_SERVER_HOST", "value": "0.0.0.0" },
+        { "name": "CHROMA_SERVER_PORT", "value": "8000" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/rag-task",
+          "awslogs-region": "ap-south-1",
+          "awslogs-stream-prefix": "chroma"
+        }
+      }
+    }
+  ]
+}

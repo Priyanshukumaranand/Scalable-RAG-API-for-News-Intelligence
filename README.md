@@ -12,27 +12,40 @@ Backend assessment implementation with Node/Express, ChromaDB, Postgres, Redis, 
 ## Architecture (mermaid)
 ```mermaid
 flowchart LR
-	User -->|HTTP| API[Express API]
+  User[Client] -->|HTTP| API[Express API]
 
-	subgraph Ingestion
-		API -->|POST /ingest| Queue[Ingestion Queue (BullMQ)]
-		Queue --> Worker[Ingestion Worker]
-		Worker --> RSS[RSS feeds / sample JSON]
-		Worker --> Emb[Embeddings (Jina)]
-		Emb --> Chroma[(Chroma DB)]
-	end
+  API -->|POST /ingest| Queue
+  Queue --> Worker
+  Worker --> Sources
+  Worker --> Embed
+  Embed --> Chroma
 
-	subgraph Chat
-		API -->|POST /chat| EmbQ[Embed query]
-		EmbQ --> Chroma
-		Chroma --> Context[Top-k passages]
-		Context --> Gemini[Gemini LLM]
-		Gemini --> API
-	end
+  API -->|POST /chat| EmbedQ
+  EmbedQ --> Chroma
+  Chroma --> Context
+  Context --> Gemini
+  Gemini --> API
 
-	API --> Redis[(Redis cache: chat ctx)]
-	API --> PG[(Postgres: interaction logs)]
-	Redis --> API
+  API --> Redis
+  API --> PG
+  Redis --> API
+
+  subgraph Ingestion
+    Queue[Ingestion Queue (BullMQ)]
+    Worker[Ingestion Worker]
+    Sources[RSS feeds or sample JSON]
+    Embed[Embeddings (Jina)]
+    Chroma[(ChromaDB)]
+  end
+
+  subgraph Chat
+    EmbedQ[Embed query]
+    Context[Top-k passages]
+    Gemini[Gemini LLM]
+  end
+
+  Redis[(Redis cache and context)]
+  PG[(Postgres interaction logs)]
 ```
 
 ## Quickstart (local)
@@ -47,7 +60,7 @@ flowchart LR
 ```
 docker-compose up --build
 ```
-Services: api (3000), postgres (5432), redis (6379), chroma (8000). Configure keys via env or `.env` loaded by Compose.
+Services: api (3000), postgres (5432), redis (6379), chroma (8000). Configure keys via env or `.env` loaded by Compose. The API waits for Postgres to be healthy and restarts on failure.
 
 ## API
 - `GET /health`
@@ -55,6 +68,7 @@ Services: api (3000), postgres (5432), redis (6379), chroma (8000). Configure ke
 - `POST /chat` — body `{ "sessionId": "demo", "query": "What's new in AI?" }`; rate-limited via `RATE_LIMIT_*`.
 - `GET /history/:sessionId` — returns ordered interaction logs.
 - `DELETE /history/:sessionId` — clears logs and cached context.
+- `GET /docs` — Swagger UI; `GET /docs.json` for the OpenAPI spec.
 
 ## Persistence & caching
 - Postgres table `interactions` stores timestamp, session_id, user_query, llm_response, response_time_ms, source_documents.
@@ -74,3 +88,4 @@ Import `docs/postman-collection.json`. Set `base_url` variable (default `http://
 ## Deployment notes
 - Dockerfile is multi-stage (build → slim runtime). Compose mounts volumes for Postgres/Chroma persistence.
 - Environment defaults live in `.env.example`; adjust rate limits or disable queue via `DISABLE_QUEUE=true` (runs ingestion inline).
+ - For local containers, use `docker compose up --build` (or `docker-compose up --build`) so the API rebuilds and starts after dependencies are ready.
