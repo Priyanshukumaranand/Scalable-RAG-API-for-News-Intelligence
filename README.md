@@ -12,40 +12,22 @@ Backend assessment implementation with Node/Express, ChromaDB, Postgres, Redis, 
 ## Architecture (mermaid)
 ```mermaid
 flowchart LR
-  User[Client] -->|HTTP| API[Express API]
+  User[Client] -->|POST /ingest| Queue[Ingestion Queue (BullMQ)]
+  Queue --> Worker[Ingestion Worker]
+  Worker --> Sources[RSS feeds or sample JSON]
+  Worker --> Embed[Embeddings (Jina)]
+  Embed --> Chroma[(ChromaDB)]
 
-  API -->|POST /ingest| Queue
-  Queue --> Worker
-  Worker --> Sources
-  Worker --> Embed
-  Embed --> Chroma
-
-  API -->|POST /chat| EmbedQ
+  User -->|POST /chat| API[Express API]
+  API --> EmbedQ[Embed query]
   EmbedQ --> Chroma
-  Chroma --> Context
-  Context --> Gemini
+  Chroma --> Context[Top-k passages]
+  Context --> Gemini[Gemini LLM]
   Gemini --> API
 
-  API --> Redis
-  API --> PG
+  API --> Redis[(Redis cache and context)]
+  API --> PG[(Postgres interaction logs)]
   Redis --> API
-
-  subgraph Ingestion
-    Queue[Ingestion Queue (BullMQ)]
-    Worker[Ingestion Worker]
-    Sources[RSS feeds or sample JSON]
-    Embed[Embeddings (Jina)]
-    Chroma[(ChromaDB)]
-  end
-
-  subgraph Chat
-    EmbedQ[Embed query]
-    Context[Top-k passages]
-    Gemini[Gemini LLM]
-  end
-
-  Redis[(Redis cache and context)]
-  PG[(Postgres interaction logs)]
 ```
 
 ## Quickstart (local)
@@ -69,6 +51,11 @@ Services: api (3000), postgres (5432), redis (6379), chroma (8000). Configure ke
 - `GET /history/:sessionId` — returns ordered interaction logs.
 - `DELETE /history/:sessionId` — clears logs and cached context.
 - `GET /docs` — Swagger UI; `GET /docs.json` for the OpenAPI spec.
+
+## Swagger UI
+- Start the server (locally or via Docker Compose) and open http://localhost:3000/docs in your browser.
+- Try endpoints directly from the page; click an operation, then "Try it out" to execute against the running API.
+- Download the raw spec at http://localhost:3000/docs.json (importable into Postman/Insomnia).
 
 ## Persistence & caching
 - Postgres table `interactions` stores timestamp, session_id, user_query, llm_response, response_time_ms, source_documents.
